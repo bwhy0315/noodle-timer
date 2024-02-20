@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'my_home_page/my_home_page.dart';
+import 'my_home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '깃헙에 잘 들어 가나? git bash ReStart',
+      title: 'Noodle-Timer Project',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
