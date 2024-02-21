@@ -25,7 +25,7 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
   // 푸시 알림 생성
-  Future<void> showNotification(int targetNumber) async {
+  Future<void> showNotification(String ramenName) async {
     // 푸시 알림의 ID
     const int notificationId = 0;
     // 알림 채널 설정값 구성
@@ -45,7 +45,7 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.show(
       notificationId, // 알림 ID
       '목표 도달', // 알림 제목
-      '$targetNumber 회 눌렀습니다!', // 알림 메시지
+      '$ramenName 조리 완료 됨', // 알림 메시지
       notificationDetails, // 알림 상세 정보
     );
   }

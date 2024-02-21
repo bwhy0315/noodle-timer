@@ -41,6 +41,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   flutter_native_splash: ^2.3.11
+  shared_preferences: ^2.0.10
 
 dev_dependencies:
   flutter_test:
