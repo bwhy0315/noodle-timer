@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:noodle_timer/screen/timer_screen.dart';
-import 'package:noodle_timer/screen/widget/w_ramen_item.dart';
+import 'package:noodle_timer/data/database.dart';
+import 'package:noodle_timer/screen/action/a_action.dart';
+import 'package:noodle_timer/screen/widget/w_raman_item.dart';
 
 class SearchNoodleScreen extends StatefulWidget {
   const SearchNoodleScreen({Key? key}) : super(key: key);
@@ -12,32 +13,8 @@ class SearchNoodleScreen extends StatefulWidget {
 String searchText = '';
 
 class _SearchNoodleScreenState extends State<SearchNoodleScreen> {
-
-  List raMenInfoList = [
-    ['안성탕면', 180],
-    ['신라면', 240],
-    ['너구리', 300],
-    ['내밥', 10],
-  ];
-
-
-  void cardClickEvent(BuildContext context, int index) {
-    String name = raMenInfoList[index][0];
-    int time = raMenInfoList[index][1];
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TimerPage(ramenName: name, cookTime: time),
-      ),
-    );
-  }
-
-  void deleteTimer(int index){
-    setState(() {
-      raMenInfoList.removeAt(index);
-    });
-  }
-
+  RamenInfoList db = RamenInfoList();
+  
   @override
   Widget build(BuildContext context) {
     //화면 구성
@@ -61,11 +38,11 @@ class _SearchNoodleScreenState extends State<SearchNoodleScreen> {
           Expanded(
             child: ListView.builder(
               // items 변수에 저장되어 있는 모든 값 출력
-              itemCount: raMenInfoList.length,
+              itemCount: db.raMenInfoList.length,
               itemBuilder: (BuildContext context, int index) {
                 // 검색 기능, 검색어가 있을 경우
                 if (searchText.isNotEmpty &&
-                    !raMenInfoList[index][0]
+                    !db.raMenInfoList[index][0]
                         .toLowerCase()
                         .contains(searchText.toLowerCase())) {
                   return SizedBox.shrink();
@@ -73,12 +50,16 @@ class _SearchNoodleScreenState extends State<SearchNoodleScreen> {
                 // 검색어가 없을 경우, 모든 항목 표시
                 else {
                   return RamenItemWidget(
-                    ramenName: raMenInfoList[index][0],
-                    cookTime: raMenInfoList[index][1],
-                    onTap: (){ 
-                      cardClickEvent(context, index); 
+                    ramenName: db.raMenInfoList[index][0],
+                    cookTime: db.raMenInfoList[index][1],
+                    onTap: () { 
+                      ItemClickEvent(
+                        context, 
+                        index,
+                        db.raMenInfoList[index][0],
+                        db.raMenInfoList[index][1]
+                      );
                     },
-                    deleteFunction: (context) => deleteTimer(index),
                   );
                 }
               },

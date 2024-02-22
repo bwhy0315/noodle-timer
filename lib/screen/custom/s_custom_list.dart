@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:noodle_timer/data/database.dart';
-import 'package:noodle_timer/main.dart';
-import 'package:noodle_timer/screen/timer_screen.dart';
+import 'package:noodle_timer/screen/action/a_action.dart';
+import 'package:noodle_timer/screen/widget/buttons/w_create_timer_button.dart';
 import 'package:noodle_timer/screen/widget/formatTime.dart';
-import 'package:noodle_timer/screen/widget/w_my_button.dart';
-import 'package:noodle_timer/screen/widget/w_ramen_item.dart';
+import 'package:noodle_timer/screen/widget/w_dialog_box.dart';
+import 'package:noodle_timer/screen/widget/w_raman_item.dart';
+import 'package:noodle_timer/setting/settings.dart';
 
 class CustomScreen extends StatefulWidget {
   const CustomScreen({Key? key}) : super(key: key);
@@ -21,11 +22,11 @@ class _CustomScreenState extends State<CustomScreen> {
 
   @override
   void initState() {
-    if (myBox.get(dbUpdateKeyName) == null){
+    if (myBox.get(dbUpdateKeyName) == null) 
       db.createInitialData();
-    } else {
+    else 
       db.loadData();
-    }
+    
     super.initState();
   }
 
@@ -33,125 +34,84 @@ class _CustomScreenState extends State<CustomScreen> {
   final timeControllerM = TextEditingController();
   final timeControllerS = TextEditingController();
 
-  void cardClickEvent(BuildContext context, int index) {
-    String name = db.customRaMenInfoList[index][0];
-    int time = db.customRaMenInfoList[index][1];
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TimerPage(ramenName: name, cookTime: time),
-      ),
+  void saveNewTimer() {
+    setState(() {
+      db.customRaMenInfoList.add([
+        nameController.text, 
+        formatCookTime(
+          timeControllerM.text,
+          timeControllerS.text,
+        )
+      ]);
+    });
+    _clearControllersAndPop();
+    db.updateDataBase();
+  }
+  void updateSave(int idx){
+    setState(() {
+      db.customRaMenInfoList[idx][0] = nameController.text;
+      db.customRaMenInfoList[idx][1] = formatCookTime(
+        timeControllerM.text,
+        timeControllerS.text,
+      );
+    });
+    _clearControllersAndPop();
+  }
+
+  void createNewTimer(){
+    showDialog(
+      context: context,
+      builder: (context) {
+        return TimerEditDialog(
+          nameController: nameController,
+          timeControllerM: timeControllerM,
+          timeControllerS: timeControllerS,
+          onSave: saveNewTimer,
+          onCancel: _clearControllersAndPop
+        );
+      },
+    );  
+  }
+
+  void updateTimer(int index) {
+    nameController.text = db.customRaMenInfoList[index][0];
+    timeControllerM.text = (db.customRaMenInfoList[index][1] ~/ 60).toString();
+    timeControllerS.text = (db.customRaMenInfoList[index][1] % 60).toString();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return TimerEditDialog(
+          nameController: nameController,
+          timeControllerM: timeControllerM,
+          timeControllerS: timeControllerS,
+          onSave:() => updateSave(index),
+          onCancel: _clearControllersAndPop
+        );
+      },
     );
   }
 
-  void saveNewTimer() {
+  void deleteTimer(int idx){
     setState(() {
-      int m = int.parse(timeControllerM.text);
-      int s = int.parse(timeControllerS.text);
+      db.customRaMenInfoList.removeAt(idx);
+    });
+    db.updateDataBase();
+  }
 
-      int saveSeconds = SaveformatTime(m, s);
-
-      db.customRaMenInfoList.add([
-        nameController.text, 
-        saveSeconds
-      ]);
+  void _clearControllersAndPop() {
+    setState(() {
       nameController.clear();
       timeControllerM.clear();
       timeControllerS.clear();
     });
     Navigator.pop(context);
-    db.updateDataBase();
-  }
-  
-  void cancleTimer() {
-    nameController.clear();
-    timeControllerM.clear();
-    timeControllerS.clear();
-    Navigator.pop(context);
-  }
-
-  void createNewTimer(){
-    showDialog(
-      context: context, 
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: baseBackgroundColor,
-          content: Container(
-            height: 200,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: '요리 이름',
-                  ),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: timeControllerM, // 수정된 부분
-                        decoration: InputDecoration(
-                          labelText: '분',
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: TextField(
-                        controller: timeControllerS,
-                        decoration: InputDecoration(
-                          labelText: '초',
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MyButton(
-                      text: "저장",
-                      onPressed: saveNewTimer
-                    ),
-                    const SizedBox(width: 4),
-                    MyButton(
-                      text: "취소",
-                      onPressed: cancleTimer
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      }
-    );
-  }
-
-  void deleteTimer(int index){
-    setState(() {
-      db.customRaMenInfoList.removeAt(index);
-    });
-    db.updateDataBase();
   }
 
   @override
   Widget build(BuildContext context) {
-    //화면 구성
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: createNewTimer,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        backgroundColor: baseBackgroundColor,
-        child: const Icon(
-          Icons.add,
-          size: 30,
-        ),
-      ),
+      floatingActionButton: CreateTimerButton(onPressed: createNewTimer),
       body: Column(
         children: <Widget>[
           Expanded(
@@ -163,9 +123,15 @@ class _CustomScreenState extends State<CustomScreen> {
                   ramenName: db.customRaMenInfoList[index][0],
                   cookTime: db.customRaMenInfoList[index][1],
                   onTap: () { 
-                    cardClickEvent(context, index);
+                    ItemClickEvent(
+                      context, 
+                      index,
+                      db.customRaMenInfoList[index][0],
+                      db.customRaMenInfoList[index][1]
+                    );
                   },
                   deleteFunction: (context) => deleteTimer(index),
+                  updateFunction: (context) => updateTimer(index),
                 );
               },
             ),
@@ -175,5 +141,3 @@ class _CustomScreenState extends State<CustomScreen> {
     );
   }
 }
-
-      

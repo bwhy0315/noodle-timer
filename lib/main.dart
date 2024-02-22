@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:noodle_timer/notification/notification_service.dart';
-import 'package:noodle_timer/screen/navigation_screen.dart';
+import 'package:noodle_timer/screen/navigation_bar.dart';
+import 'package:noodle_timer/setting/settings.dart';
 
 void main() async {
 
@@ -17,11 +18,6 @@ void main() async {
 
   runApp(const MyApp());
 }
-
-const baseBackgroundColor = Color.fromARGB(255,253,222,140);
-const myButtonBackgroundColor = Color.fromARGB(255,253,202,140);
-const String localName = 'ramenTimerDB';
-const String dbUpdateKeyName = 'CUSTOMTIMER';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

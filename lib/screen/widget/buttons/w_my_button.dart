@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:noodle_timer/main.dart';
+import 'package:noodle_timer/setting/settings.dart';
 
 class MyButton extends StatelessWidget {
 

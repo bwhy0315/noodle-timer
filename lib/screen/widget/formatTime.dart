@@ -14,3 +14,11 @@ int SaveformatTime(int m, int s) {
 
   return saveSeconds;
 }
+
+int formatCookTime(String M, String S){
+  int m = int.parse(M);
+  int s = int.parse(S);
+
+  int cookTimes = SaveformatTime(m, s);
+  return cookTimes;
+}
