@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:noodle_timer/data/database.dart';
 import 'package:noodle_timer/screen/action/a_action.dart';
+import 'package:noodle_timer/screen/w_app_bar.dart';
 import 'package:noodle_timer/screen/widget/w_raman_item.dart';
 
 class SearchNoodleScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ class _SearchNoodleScreenState extends State<SearchNoodleScreen> {
   Widget build(BuildContext context) {
     //화면 구성
     return Scaffold(
+      appBar: MyAppBar(titleName: "누들"),
       body: Column(
         children: <Widget>[
           Padding(
@@ -55,7 +57,6 @@ class _SearchNoodleScreenState extends State<SearchNoodleScreen> {
                     onTap: () { 
                       ItemClickEvent(
                         context, 
-                        index,
                         db.raMenInfoList[index][0],
                         db.raMenInfoList[index][1]
                       );

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:noodle_timer/data/database.dart';
 import 'package:noodle_timer/screen/action/a_action.dart';
+import 'package:noodle_timer/screen/w_app_bar.dart';
 import 'package:noodle_timer/screen/widget/buttons/w_create_timer_button.dart';
 import 'package:noodle_timer/screen/widget/formatTime.dart';
-import 'package:noodle_timer/screen/widget/w_dialog_box.dart';
+import 'package:noodle_timer/screen/widget/dialog/w_dialog_box.dart';
 import 'package:noodle_timer/screen/widget/w_raman_item.dart';
 import 'package:noodle_timer/setting/settings.dart';
 
@@ -20,13 +21,15 @@ class _CustomScreenState extends State<CustomScreen> {
   final myBox = Hive.box(localName);
   CustomTimerDataBase db = CustomTimerDataBase();
 
+  final String emptyDB = "저장된 타이머가 없습니다\n 티이머를 만들어 보세요!!";
+
   @override
   void initState() {
-    if (myBox.get(dbUpdateKeyName) == null) 
+    if (myBox.get(dbUpdateKeyName) == null) {
       db.createInitialData();
-    else 
+    } else {
       db.loadData();
-    
+    }
     super.initState();
   }
 
@@ -111,31 +114,39 @@ class _CustomScreenState extends State<CustomScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const MyAppBar(titleName: '커스텀누들'),
       floatingActionButton: CreateTimerButton(onPressed: createNewTimer),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Expanded(
-            child: ListView.builder(
-              // items 변수에 저장되어 있는 모든 값 출력
-              itemCount: db.customRaMenInfoList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return RamenItemWidget(
-                  ramenName: db.customRaMenInfoList[index][0],
-                  cookTime: db.customRaMenInfoList[index][1],
-                  onTap: () { 
-                    ItemClickEvent(
-                      context, 
-                      index,
-                      db.customRaMenInfoList[index][0],
-                      db.customRaMenInfoList[index][1]
-                    );
-                  },
-                  deleteFunction: (context) => deleteTimer(index),
-                  updateFunction: (context) => updateTimer(index),
-                );
-              },
-            ),
-          ),
+          if(db.customRaMenInfoList.isNotEmpty)
+            Expanded(
+              child: ListView.builder(
+                itemCount: db.customRaMenInfoList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return RamenItemWidget(
+                    ramenName: db.customRaMenInfoList[index][0],
+                    cookTime: db.customRaMenInfoList[index][1],
+                    onTap: () { 
+                      ItemClickEvent(
+                        context, 
+                        db.customRaMenInfoList[index][0],
+                        db.customRaMenInfoList[index][1]
+                      );
+                    },
+                    deleteFunction: (context) => deleteTimer(index),
+                    updateFunction: (context) => updateTimer(index),
+                  );
+                },
+              ),
+            )
+          else 
+             Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                 Text(emptyDB),
+               ],
+             )
         ],
       ),
     );

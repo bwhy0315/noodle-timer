@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:noodle_timer/notification/notification_service.dart';
+import 'package:noodle_timer/screen/notification/notification_service.dart';
 import 'package:noodle_timer/screen/navigation_bar.dart';
 import 'package:noodle_timer/setting/settings.dart';
 
@@ -26,10 +26,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Noodle-Timer Project',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
       home: const HomeScreen(),
     );
   }

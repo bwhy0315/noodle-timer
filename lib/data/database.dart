@@ -8,11 +8,7 @@ class CustomTimerDataBase {
   final myBox = Hive.box(localName);
 
   void createInitialData() {
-    customRaMenInfoList = [
-      ['안성탕면(꾸찌라이식)', 20],
-      ['신라면(엄마표)', 40],
-      ['너구리(미역많이)', 30],
-    ];
+    customRaMenInfoList = [ ];
   }
 
   void loadData(){
