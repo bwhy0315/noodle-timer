@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:noodle_timer/screen/box_sized/container.dart';
-import 'package:noodle_timer/screen/widget/formatTime.dart';
+import 'package:noodle_timer/screen/widget/format.dart';
 import 'package:noodle_timer/setting/settings.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class RamenItemWidget extends StatefulWidget {
   final String ramenName;
@@ -27,7 +27,7 @@ class RamenItemWidget extends StatefulWidget {
 
 class _RamenItemWidgetState extends State<RamenItemWidget> {
   bool isOpen = false;
-
+  ButtonStyle iconButtonColor = ButtonStyle( backgroundColor:  MaterialStateProperty.all(Colors.red));
   void isOpenSetting(){
     setState(() {
       isOpen = !isOpen;
@@ -37,82 +37,60 @@ class _RamenItemWidgetState extends State<RamenItemWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: baseBackgroundColor,
-      padding: EdgeInsets.all(5),
-      margin: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(9),
+        color: baseBackgroundColor,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            child: Row(
-              children: [
-                Text(
-                  widget.ramenName,
-                  style: TextStyle(color: Colors.blue),
-                ),
-                width5,
-                Text(
-                  '${formatTime(widget.cookTime)}',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
-            ),
-          ),
+          (calculateSizeValue(context, 1, 0) == 1 
+            ? widget.ramenName : truncateRamenName(widget.ramenName))
+              .text.bold.size(19).textStyle(
+                TextStyle( color: Colors.brown[800])
+              ).make().pOnly(left: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              formatTime(widget.cookTime).text.bold.size(20).textStyle(
+                TextStyle(color: Colors.blue[600])).make().p(20),
               IconButton(
-                icon: const Icon(Icons.access_time),
+                icon: const Icon(Icons.access_time, size: 40),
                 onPressed: widget.onTap,
-              ),
-              height10,
-              if ((widget.deleteFunction != null || widget.updateFunction != null) && !isOpen)
-
+              ).pOnly(left: 3),
+              if ((widget.deleteFunction != null || widget.updateFunction != null))
                 if(!isOpen)
                   IconButton(
-                    icon: const Icon(Icons.settings),
+                    icon: const Icon(Icons.settings, size: 40),
                     onPressed: isOpenSetting
                   ),
-
                 if(isOpen)
-                  Row(
-                    children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:  MaterialStateProperty.all(Colors.red)
-                        ),
-                        onPressed: widget.updateFunction != null
-                          ? () => {
-                              widget.updateFunction!(context),
-                              setState((){
-                                isOpen = !isOpen;
-                              })
-                            }
-                          : null,
-                        child: Text(
-                          '수정',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      height5,
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.red)
-                        ),
-                        onPressed: widget.deleteFunction != null
-                          ? () => widget.deleteFunction!(context)
-                          : null,
-                        child: Text(
-                          '삭제',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  )
+                  IconButton(
+                    style: iconButtonColor,
+                    onPressed: widget.updateFunction != null
+                      ? () => {
+                          widget.updateFunction!(context),
+                          setState(() { isOpen = !isOpen; })
+                        }
+                      : null,
+                    icon: const Icon(Icons.edit, color: Colors.white,),
+                  ),
+                if(isOpen)
+                  IconButton(
+                    style: iconButtonColor,
+                    onPressed: widget.deleteFunction != null
+                      ? () => widget.deleteFunction!(context)
+                      : null,
+                    icon: const Icon(Icons.delete, color: Colors.white,),
+                  ),
             ],
           )
         ],
       ),
-    );
+    ).box.withDecoration(
+      BoxDecoration(
+        border: Border.all(color: Colors.blue, width: 2),
+        borderRadius: BorderRadius.circular(11)
+      )).make();
   }
 }

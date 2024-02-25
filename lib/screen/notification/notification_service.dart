@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:noodle_timer/screen/widget/dialog/w_dialog_notification.dart';
 import 'package:permission_handler/permission_handler.dart';
  
 class NotificationService {
@@ -53,5 +55,18 @@ class NotificationService {
   Future<PermissionStatus> requestNotificationPermissions() async {
     final status = await Permission.notification.request();
     return status;
+  }
+}
+
+class RequestNotification {
+  static void requestNotificationPermissions(BuildContext context) async {
+    final status = await NotificationService().requestNotificationPermissions();
+    if (status.isDenied && context.mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => 
+            const NotificationDialogWidget(onPressed: openAppSettings,)
+      );
+    }
   }
 }

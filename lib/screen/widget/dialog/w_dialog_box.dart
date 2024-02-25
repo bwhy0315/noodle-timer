@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:noodle_timer/screen/widget/buttons/w_my_button.dart';
+import 'package:noodle_timer/screen/box_sized/container.dart';
+import 'package:noodle_timer/screen/widget/buttons/w_customButton.dart';
 import 'package:noodle_timer/setting/settings.dart';
 
 class TimerEditDialog extends StatefulWidget {
@@ -27,35 +28,29 @@ class _TimerEditDialogState extends State<TimerEditDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: baseBackgroundColor,
-      content: Container(
+      content: SizedBox(
         height: 200,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextField(
               controller: widget.nameController,
-              decoration: InputDecoration(
-                labelText: '요리 이름',
-              ),
+              decoration: const InputDecoration( labelText: '요리 이름' ),
             ),
             Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: widget.timeControllerM,
-                    decoration: InputDecoration(
-                      labelText: '분',
-                    ),
+                    decoration: const InputDecoration( labelText: '분' ),
                     keyboardType: TextInputType.number,
                   ),
                 ),
-                SizedBox(width: 16),
+                width10,
                 Expanded(
                   child: TextField(
                     controller: widget.timeControllerS,
-                    decoration: InputDecoration(
-                      labelText: '초',
-                    ),
+                    decoration: const InputDecoration( labelText: '초' ),
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -64,15 +59,20 @@ class _TimerEditDialogState extends State<TimerEditDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                MyButton(
-                  text: "저장",
-                  onPressed: widget.onSave,
+                // 저장을 누르면 빈값을 저장 해도 warningText 가 넘어가서 타이머 저장 되었다고 snackbar가 나타남 고쳐야 함
+                CustomButton(
+                  buttonText: "저장",
+                  warningText: "타이머 저장됨",
+                  onPressed: widget.onSave, 
+                  durationTime: 10,
                 ),
-                const SizedBox(width: 4),
-                MyButton(
-                  text: "취소",
-                  onPressed: widget.onCancel,
-                ),
+                width5,
+                CustomButton(
+                  buttonText: "취소",
+                  warningText: "타이머 작성이 취소되었습니다.",
+                  onPressed: widget.onCancel, 
+                  durationTime: 2,
+                )
               ],
             )
           ],

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:noodle_timer/screen/notification/notification_service.dart';
 import 'package:noodle_timer/screen/navigation_bar.dart';
-import 'package:noodle_timer/setting/settings.dart';
 
 void main() async {
 
@@ -14,7 +13,7 @@ void main() async {
   await Hive.initFlutter();
   await notificationService.init();
 
-  var box = await Hive.openBox(localName);
+  var box = await Hive.openBox('ramenTimerDB');
 
   runApp(const MyApp());
 }
@@ -24,9 +23,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Noodle-Timer Project',
-      home: const HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }

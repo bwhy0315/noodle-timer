@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:noodle_timer/screen/notification/notification_service.dart';
 import 'package:noodle_timer/screen/box_sized/container.dart';
+import 'package:noodle_timer/screen/notification/notification_service.dart';
 import 'package:noodle_timer/screen/w_app_bar.dart';
+import 'package:noodle_timer/screen/widget/buttons/w_customButton.dart';
 import 'package:noodle_timer/screen/widget/dialog/w_dialog_notification.dart';
-import 'package:noodle_timer/screen/widget/formatTime.dart';
-import 'package:noodle_timer/screen/widget/warning/snakbar.dart';
+import 'package:noodle_timer/screen/widget/format.dart';
 import 'package:noodle_timer/setting/settings.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 
 class TimerPage extends StatefulWidget {
   final String ramenName;
@@ -34,17 +33,7 @@ class _TimerPageState extends State<TimerPage> {
   void initState() {
     super.initState();
     _targetNumber = widget.cookTime;
-    _requestNotificationPermissions();
-  }
-
-  void _requestNotificationPermissions() async {
-    if (await NotificationService().requestNotificationPermissions().isDenied && context.mounted) {
-      showDialog(
-        context: context,
-        builder: (context) => 
-            NotificationDialogWidget(onPressed: openAppSettings,)
-      );
-    }
+    RequestNotification.requestNotificationPermissions(context);
   }
 
   @override
@@ -52,38 +41,38 @@ class _TimerPageState extends State<TimerPage> {
     double progress = (_targetNumber / widget.cookTime).clamp(0.0, 1.0);
 
     return Scaffold(
-      appBar: const MyAppBar(titleName: '타이머'),
+      appBar: const MyAppBar(titleName: '누들 타이머'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('${widget.ramenName}'),
+            Text(widget.ramenName),
             Stack(
               children: [
                 Positioned(
-                  top: 90,left: 35,
+                  top:  calculateSizeValue(context, 60, 90),
+                  left: calculateSizeValue(context, 105, 40),
                   child: Text(
-                    '${formatTime(_targetNumber)}',
+                    formatTime(_targetNumber),
                     style: TextStyle(
-                      fontSize: 80
+                      fontSize: calculateSizeValue(context, 55, 80)
                     ),
                   )
                 ),
-                Container(
-                  width: 300,
-                  height: 300,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle, // 원형 모양
-                    border: Border.all(color: Colors.black, width: 1.0), // 테두리 속성
-                  ),
+                SizedBox(
+                  width: calculateSizeValue(context, 220, 300),
+                  height: calculateSizeValue(context, 220, 300),
                   child: CircularProgressIndicator(
                     value: progress,
-                    strokeWidth: 16,
+                    strokeWidth: calculateSizeValue(context, 10, 16),
                     color: baseBackgroundColor,
                   ),
+                ).pOnly(
+                  left: calculateSizeValue(context, 75, 0), 
+                  bottom: calculateSizeValue(context, 50, 0)
                 ),
               ],
-            ).pSymmetric(v: 50),
+            ).pOnly(right: calculateSizeValue(context, 200, 0)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -94,13 +83,14 @@ class _TimerPageState extends State<TimerPage> {
                   )
                 else
                   height10,
-                  CustomSnackbarButtonWidget(
+                  CustomButton(
                     onPressed: _toggleTimer,
-                    text:isStart ? '정지' : '시작', 
+                    buttonText: isStart ? '정지' : '시작', 
+                    warningText: "Tip!! 현재 페이지를 벗어나면 타이머가 초기화됩니다.",
                     durationTime: _targetNumber
                   ),
               ],
-            ).p(10),
+            )
           ],
         ),
       ),
@@ -133,7 +123,6 @@ class _TimerPageState extends State<TimerPage> {
         if (_targetNumber == 0) {
           _targetNumber = _targetNumber;
           NotificationService().showNotification(widget.ramenName);
-          _stopTimer();
           _resetCounter();
         }
       });

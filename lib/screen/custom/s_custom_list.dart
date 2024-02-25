@@ -4,10 +4,13 @@ import 'package:noodle_timer/data/database.dart';
 import 'package:noodle_timer/screen/action/a_action.dart';
 import 'package:noodle_timer/screen/w_app_bar.dart';
 import 'package:noodle_timer/screen/widget/buttons/w_create_timer_button.dart';
-import 'package:noodle_timer/screen/widget/formatTime.dart';
+import 'package:noodle_timer/screen/widget/controller.dart';
+import 'package:noodle_timer/screen/widget/format.dart';
 import 'package:noodle_timer/screen/widget/dialog/w_dialog_box.dart';
 import 'package:noodle_timer/screen/widget/w_raman_item.dart';
+import 'package:noodle_timer/screen/widget/warning/snackbar.dart';
 import 'package:noodle_timer/setting/settings.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class CustomScreen extends StatefulWidget {
   const CustomScreen({Key? key}) : super(key: key);
@@ -17,11 +20,10 @@ class CustomScreen extends StatefulWidget {
 }
 
 class _CustomScreenState extends State<CustomScreen> {
-
-  final myBox = Hive.box(localName);
+  final myBox = Hive.box('ramenTimerDB');
   CustomTimerDataBase db = CustomTimerDataBase();
 
-  final String emptyDB = "저장된 타이머가 없습니다\n 티이머를 만들어 보세요!!";
+  final String emptyDB = "저장된 타이머가 없습니다\n 자신만의 타이머를 만들어 보세요!!";
 
   @override
   void initState() {
@@ -33,22 +35,22 @@ class _CustomScreenState extends State<CustomScreen> {
     super.initState();
   }
 
-  final nameController = TextEditingController();
-  final timeControllerM = TextEditingController();
-  final timeControllerS = TextEditingController();
-
   void saveNewTimer() {
-    setState(() {
-      db.customRaMenInfoList.add([
-        nameController.text, 
-        formatCookTime(
-          timeControllerM.text,
-          timeControllerS.text,
-        )
-      ]);
-    });
-    _clearControllersAndPop();
-    db.updateDataBase();
+    if(nameController.text.isEmpty || timeControllerM.text.isEmpty || timeControllerS.text.isEmpty){
+      SnackbarUtils.showCustomSnackbar(context, 5, "Tips! 입력을 올바르게 해 주세요.");
+    } else {
+      setState(() {
+        db.customRaMenInfoList.add([
+          nameController.text, 
+          formatCookTime(
+            timeControllerM.text,
+            timeControllerS.text,
+          )
+        ]);
+      });
+      _clearControllersAndPop();
+      db.updateDataBase();
+    }
   }
   void updateSave(int idx){
     setState(() {
@@ -136,19 +138,14 @@ class _CustomScreenState extends State<CustomScreen> {
                     },
                     deleteFunction: (context) => deleteTimer(index),
                     updateFunction: (context) => updateTimer(index),
-                  );
+                  ).pSymmetric(v:10);
                 },
               ),
             )
           else 
-             Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                 Text(emptyDB),
-               ],
-             )
+             Center(child: emptyDB.text.align(TextAlign.center).bold.make())
         ],
-      ),
+      ).p(10),
     );
   }
 }

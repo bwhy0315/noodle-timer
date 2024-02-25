@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class NotificationDialogWidget extends StatelessWidget {
-
   final Function() onPressed;
-
   const NotificationDialogWidget({super.key, required this.onPressed});
 
   @override

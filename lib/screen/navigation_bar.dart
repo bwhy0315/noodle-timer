@@ -26,7 +26,6 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //화면 구성
     return Scaffold(
       body: _navIndex.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(

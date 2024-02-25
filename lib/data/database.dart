@@ -5,7 +5,7 @@ class CustomTimerDataBase {
 
   List customRaMenInfoList = [];
 
-  final myBox = Hive.box(localName);
+  final myBox = Hive.box('ramenTimerDB');
 
   void createInitialData() {
     customRaMenInfoList = [ ];
