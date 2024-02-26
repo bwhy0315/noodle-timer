@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noodle_timer/screen/s_nomal_timer.dart';
 import 'package:noodle_timer/setting/settings.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -17,11 +18,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: const Icon(Icons.access_time),
           onPressed: () {
-            // logic actions
+            Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (context) =>  const NomalTimerScreen())
+            );
           },
         ),
       ],
-      
     );
   }
   

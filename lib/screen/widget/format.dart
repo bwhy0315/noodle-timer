@@ -25,12 +25,6 @@ int formatCookTime(String M, String S){
   return cookTimes;
 }
 
-double calculateSizeValue(BuildContext context, double trueValue, double falseValue){
-  double diviceSize = MediaQuery.of(context).size.width;
-  diviceSize = diviceSize > 600 ? trueValue : falseValue;
-  return diviceSize;
-}
-
 String truncateRamenName(String ramenName) {
   const int maxCharacters = 9;
   

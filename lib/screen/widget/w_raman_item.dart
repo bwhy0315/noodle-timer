@@ -9,7 +9,6 @@ class RamenItemWidget extends StatefulWidget {
   final VoidCallback onTap;
   final Function(BuildContext)? deleteFunction;
   final Function(BuildContext)? updateFunction;
-  final Function(BuildContext)? itemSetting;
 
   const RamenItemWidget({
     Key? key,
@@ -18,7 +17,6 @@ class RamenItemWidget extends StatefulWidget {
     required this.onTap,
     this.deleteFunction,
     this.updateFunction,
-    this.itemSetting,
   }) : super(key: key);
 
   @override
@@ -44,21 +42,24 @@ class _RamenItemWidgetState extends State<RamenItemWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          (calculateSizeValue(context, 1, 0) == 1 
-            ? widget.ramenName : truncateRamenName(widget.ramenName))
-              .text.bold.size(19).textStyle(
-                TextStyle( color: Colors.brown[800])
-              ).make().pOnly(left: 20),
+          truncateRamenName(widget.ramenName)
+            .text.bold.size(19).textStyle(
+              TextStyle( color: Colors.brown[800])
+            ).make().pOnly(left: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               formatTime(widget.cookTime).text.bold.size(20).textStyle(
-                TextStyle(color: Colors.blue[600])).make().p(20),
+                TextStyle(color: Colors.blue[600])
+              ).make().pOnly(
+                top:20, bottom: 20, 
+                right:widget.deleteFunction != null ? 0 : 15),
               IconButton(
                 icon: const Icon(Icons.access_time, size: 40),
                 onPressed: widget.onTap,
-              ).pOnly(left: 3),
-              if ((widget.deleteFunction != null || widget.updateFunction != null))
+              ).pOnly(right: widget.deleteFunction != null ? 0 : 10, left:widget.deleteFunction != null ? 0 : 15),
+
+              if ((widget.deleteFunction != null ))
                 if(!isOpen)
                   IconButton(
                     icon: const Icon(Icons.settings, size: 40),

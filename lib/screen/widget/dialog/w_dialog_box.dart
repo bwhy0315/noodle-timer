@@ -26,10 +26,18 @@ class TimerEditDialog extends StatefulWidget {
 class _TimerEditDialogState extends State<TimerEditDialog> {
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return Dialog(
+      // AlertDialog 일떄 TextField 는 화면에 나왔지만 버튼이 나오지 않았음 Dialog 로 바꾼뒤 버튼이 
+      //생김 이유는 불명 우선 만들고 찾아보기
       backgroundColor: baseBackgroundColor,
-      content: SizedBox(
-        height: 200,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: BorderSide(color: Colors.blue.shade300, width: 1)
+      ),
+      child: Container(
+        padding: EdgeInsets.all(20),
+        height: 250,
+        width: 200,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -59,10 +67,8 @@ class _TimerEditDialogState extends State<TimerEditDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // 저장을 누르면 빈값을 저장 해도 warningText 가 넘어가서 타이머 저장 되었다고 snackbar가 나타남 고쳐야 함
                 CustomButton(
                   buttonText: "저장",
-                  warningText: "타이머 저장됨",
                   onPressed: widget.onSave, 
                   durationTime: 10,
                 ),

@@ -23,43 +23,39 @@ class _CustomScreenState extends State<CustomScreen> {
   final myBox = Hive.box('ramenTimerDB');
   CustomTimerDataBase db = CustomTimerDataBase();
 
-  final String emptyDB = "저장된 타이머가 없습니다\n 자신만의 타이머를 만들어 보세요!!";
-
   @override
   void initState() {
-    if (myBox.get(dbUpdateKeyName) == null) {
-      db.createInitialData();
-    } else {
-      db.loadData();
-    }
+    if (myBox.get(dbUpdateKeyName) == null) { db.createInitialData(); } 
+    else { db.loadData(); }
     super.initState();
   }
 
   void saveNewTimer() {
     if(nameController.text.isEmpty || timeControllerM.text.isEmpty || timeControllerS.text.isEmpty){
-      SnackbarUtils.showCustomSnackbar(context, 5, "Tips! 입력을 올바르게 해 주세요.");
+      SnackbarUtils.showCustomSnackbar(context, 4, "Tips! 입력을 올바르게 해주세요.");
+    } else if(nameController.text.length > 15){
+      SnackbarUtils.showCustomSnackbar(context, 4, "요리 이름은 15자 이상은 입력이 불가 합니다.");
+    } else if(int.parse(timeControllerM.text) > 59 || int.parse(timeControllerS.text) > 59){
+      SnackbarUtils.showCustomSnackbar(context, 4, "타이머 분, 초 는 60이상 저장이 불가 합니다.");
     } else {
       setState(() {
         db.customRaMenInfoList.add([
           nameController.text, 
-          formatCookTime(
-            timeControllerM.text,
-            timeControllerS.text,
-          )
+          formatCookTime( timeControllerM.text, timeControllerS.text )
         ]);
       });
       _clearControllersAndPop();
       db.updateDataBase();
+      //SnackbarUtils.showCustomSnackbar(context, 2, "타이머 저장됨");
     }
   }
+  
   void updateSave(int idx){
     setState(() {
       db.customRaMenInfoList[idx][0] = nameController.text;
-      db.customRaMenInfoList[idx][1] = formatCookTime(
-        timeControllerM.text,
-        timeControllerS.text,
-      );
+      db.customRaMenInfoList[idx][1] = formatCookTime( timeControllerM.text,timeControllerS.text );
     });
+    //SnackbarUtils.showCustomSnackbar(context, 3, "타이머가 수정되었습니다.");
     _clearControllersAndPop();
   }
 
@@ -101,6 +97,7 @@ class _CustomScreenState extends State<CustomScreen> {
     setState(() {
       db.customRaMenInfoList.removeAt(idx);
     });
+    SnackbarUtils.showCustomSnackbar(context, 3, "타이머가 삭제되었습니다.");
     db.updateDataBase();
   }
 
@@ -129,8 +126,7 @@ class _CustomScreenState extends State<CustomScreen> {
                   return RamenItemWidget(
                     ramenName: db.customRaMenInfoList[index][0],
                     cookTime: db.customRaMenInfoList[index][1],
-                    onTap: () { 
-                      ItemClickEvent(
+                    onTap: () { ItemClickEvent(
                         context, 
                         db.customRaMenInfoList[index][0],
                         db.customRaMenInfoList[index][1]
@@ -143,7 +139,9 @@ class _CustomScreenState extends State<CustomScreen> {
               ),
             )
           else 
-             Center(child: emptyDB.text.align(TextAlign.center).bold.make())
+             Center(
+              child: "저장된 타이머가 없습니다\n 자신만의 타이머를 만들어 보세요!!".text.align(TextAlign.center).bold.make()
+            )
         ],
       ).p(10),
     );
