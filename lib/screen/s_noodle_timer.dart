@@ -11,12 +11,14 @@ import 'package:velocity_x/velocity_x.dart';
 
 class TimerPage extends StatefulWidget {
   final String ramenName;
+  final String? titleName;
   final int cookTime;
 
   const TimerPage({
     Key? key, 
     required this.ramenName, 
-    required this.cookTime
+    required this.cookTime, 
+    this.titleName
   }) : super(key: key);
 
   @override
@@ -40,7 +42,7 @@ class _TimerPageState extends State<TimerPage> {
     double progress = (_targetNumber / widget.cookTime).clamp(0.0, 1.0);
 
     return Scaffold(
-      appBar: const MyAppBar(titleName: '누들 타이머'),
+      appBar: MyAppBar(titleName: '누들 타이머'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -89,20 +91,19 @@ class _TimerPageState extends State<TimerPage> {
     setState(() {
       _targetNumber = widget.cookTime;
         isStart = !isStart;
-      _stopTimer();
+        _timer?.cancel();
     });
   }
 
   void _toggleTimer() {
     setState(() {
       if (isStart == true) {
-        _stopTimer();
+        _timer?.cancel();
       } else {
         _startTimer();
       }
       isStart = !isStart;
     });
-    
   }
 
   void _startTimer() {
@@ -116,9 +117,5 @@ class _TimerPageState extends State<TimerPage> {
         }
       });
     });
-  }
-
-  void _stopTimer() {
-    _timer?.cancel();
   }
 }

@@ -10,9 +10,9 @@ const width5 = BoxWidth(5);
 
 
 class BoxHeight extends SizedBox {
-  const BoxHeight(double value) : super(height: value);
+  const BoxHeight(double value, {super.key}) : super(height: value);
 }
 
 class BoxWidth extends SizedBox {
-  const BoxWidth(double value) : super(width: value);
+  const BoxWidth(double value, {super.key}) : super(width: value);
 }

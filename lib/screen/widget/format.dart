@@ -42,4 +42,17 @@ class NomalTimerUtils {
       ? "${(controller.duration!.inHours % 60).toString().padLeft(2, '0')}:${(controller.duration!.inMinutes % 60).toString().padLeft(2, '0')}:${(controller.duration!.inSeconds % 60).toString().padLeft(2, '0')}"
       : "${(count.inHours % 60).toString().padLeft(2, '0')}:${(count.inMinutes % 60).toString().padLeft(2, '0')}:${(count.inSeconds % 60).toString().padLeft(2, '0')}";
   }
+
+
+  static int parseDurationInSeconds(String durationString) {
+    List<String> timeComponents = durationString.split(':');
+    int hours = int.parse(timeComponents[0]);
+    if(hours == 0) hours = 1;
+    int minutes = int.parse(timeComponents[1]);
+    if(minutes == 0) hours = 1;
+    int seconds = int.parse(timeComponents[2]);
+
+    return hours * 3600 + minutes * 60 + seconds;
+  }
 }
+

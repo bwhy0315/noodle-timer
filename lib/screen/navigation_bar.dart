@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noodle_timer/screen/custom/s_custom_list.dart';
-import 'package:noodle_timer/screen/s_nomal_timer.dart';
+import 'package:noodle_timer/screen/s_noodle_timer.dart';
 import 'package:noodle_timer/screen/s_search_noodle.dart';
 import 'package:noodle_timer/screen/w_app_bar.dart';
 import 'package:noodle_timer/setting/settings.dart';
@@ -18,12 +18,7 @@ class HomeScreenState extends State<HomeScreen> {
   final List<Widget> _navIndex = [
     const SearchNoodleScreen(),
     const CustomScreen(),
-    const Scaffold(
-      backgroundColor: Color(0xfff5fbff),
-      appBar: MyAppBar(titleName: '3분 타이머'),
-      body: NomalTimerScreen(exTime: 180,),
-    )
-    
+    const TimerPage(cookTime: 180, ramenName: '라면타이머')
   ];
 
   void _onNavTapped(int index) {
