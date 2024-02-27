@@ -15,16 +15,22 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       elevation: 0.0,
       actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.access_time),
-          onPressed: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(
-                builder: (context) =>  const NomalTimerScreen())
-            );
-          },
-        ),
+        if(titleName != '기본 타이머')
+          IconButton(
+            icon: const Icon(Icons.access_time),
+            onPressed: () {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => const Scaffold(
+                    backgroundColor: Color(0xfff5fbff),
+                    appBar: MyAppBar(titleName: '기본 타이머'),
+                    body: NomalTimerScreen(exTime: 0,),
+                  )
+                )
+              );
+            },
+          ),
       ],
     );
   }

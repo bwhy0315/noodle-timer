@@ -5,6 +5,7 @@ import 'package:noodle_timer/screen/notification/notification_service.dart';
 import 'package:noodle_timer/screen/w_app_bar.dart';
 import 'package:noodle_timer/screen/widget/buttons/w_customButton.dart';
 import 'package:noodle_timer/screen/widget/format.dart';
+import 'package:noodle_timer/screen/widget/w_progress.dart';
 import 'package:noodle_timer/setting/settings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -51,13 +52,11 @@ class _TimerPageState extends State<TimerPage> {
                   top: 90, left: 40,
                   child: formatTime(_targetNumber).text.size(80).make()
                 ),
-                SizedBox(
-                  width: 300, height: 300,
-                  child: CircularProgressIndicator(
-                    value: progress,
-                    strokeWidth: 16,
-                    color: baseBackgroundColor,
-                  ),
+                ProgressWidget(
+                  backgroundColor: Colors.grey.shade300,
+                  strokeColor: baseBackgroundColor,
+                  progress: progress,
+                  strokeWidth: 13
                 ),
               ],
             ),

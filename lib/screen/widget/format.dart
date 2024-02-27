@@ -34,3 +34,12 @@ String truncateRamenName(String ramenName) {
     return '${ramenName.substring(0, maxCharacters)}...';
   }
 }
+
+class NomalTimerUtils {
+  static String getCountText(AnimationController controller) {
+    Duration count = controller.duration! * controller.value;
+    return controller.isDismissed
+      ? "${(controller.duration!.inHours % 60).toString().padLeft(2, '0')}:${(controller.duration!.inMinutes % 60).toString().padLeft(2, '0')}:${(controller.duration!.inSeconds % 60).toString().padLeft(2, '0')}"
+      : "${(count.inHours % 60).toString().padLeft(2, '0')}:${(count.inMinutes % 60).toString().padLeft(2, '0')}:${(count.inSeconds % 60).toString().padLeft(2, '0')}";
+  }
+}

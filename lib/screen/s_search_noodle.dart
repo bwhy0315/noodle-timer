@@ -24,7 +24,7 @@ class _SearchNoodleScreenState extends State<SearchNoodleScreen> {
       body: Column(
         children: <Widget>[
           TextField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: '검색어를 입력해주세요.',
               border: OutlineInputBorder(),
             ),
@@ -49,7 +49,8 @@ class _SearchNoodleScreenState extends State<SearchNoodleScreen> {
             BoxDecoration(
               border: Border.all(color: Colors.blue.shade200, width: 1),
               borderRadius: BorderRadius.circular(10)
-            )).make().pOnly(left: 20, right: 20, bottom: 10, top: 5),
+            )
+          ).make().pOnly(left: 20, right: 20, bottom: 10, top: 5),
           Expanded(
             child: ListView.builder(
               itemCount: db.raMenInfoList.length,

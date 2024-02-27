@@ -46,7 +46,7 @@ class _CustomScreenState extends State<CustomScreen> {
       });
       _clearControllersAndPop();
       db.updateDataBase();
-      //SnackbarUtils.showCustomSnackbar(context, 2, "타이머 저장됨");
+      SnackbarUtils.showCustomSnackbar(context, 2, "타이머 저장됨");
     }
   }
   
@@ -55,7 +55,7 @@ class _CustomScreenState extends State<CustomScreen> {
       db.customRaMenInfoList[idx][0] = nameController.text;
       db.customRaMenInfoList[idx][1] = formatCookTime( timeControllerM.text,timeControllerS.text );
     });
-    //SnackbarUtils.showCustomSnackbar(context, 3, "타이머가 수정되었습니다.");
+    SnackbarUtils.showCustomSnackbar(context, 3, "타이머가 수정되었습니다.");
     _clearControllersAndPop();
   }
 

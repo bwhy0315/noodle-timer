@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noodle_timer/screen/widget/warning/snackbar.dart';
+import 'package:noodle_timer/setting/settings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CustomButton extends StatelessWidget {
@@ -24,7 +25,7 @@ class CustomButton extends StatelessWidget {
           return buttonText == '일시정지' 
             ? Colors.red 
             : buttonText == '시작' 
-              ? const Color.fromARGB(255, 95, 103, 217)
+              ? optionPerpleColor
               : buttonText == '저장' || buttonText == '취소' 
                 ? const Color.fromARGB(255,253,202,140) 
                 : Colors.grey[200];
@@ -33,14 +34,14 @@ class CustomButton extends StatelessWidget {
           ? MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
-                side: const BorderSide(color: Color.fromARGB(255, 95, 103, 217), width: 2)
+                side: const BorderSide(color: optionPerpleColor, width: 2)
               ),
             )
           : null
       ),
       onPressed: () {
         onPressed.call();
-        if(warningText != null) {
+        if(warningText != null && durationTime != 0) {
           SnackbarUtils.showCustomSnackbar(context, durationTime, warningText!);
         }
       },

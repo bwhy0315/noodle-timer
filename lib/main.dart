@@ -11,6 +11,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  //device 세로모드 고정
 
   final notificationService = NotificationService();
   // Flutter 엔진 초기화

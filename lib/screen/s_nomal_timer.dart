@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:noodle_timer/screen/w_app_bar.dart';
-import 'package:noodle_timer/screen/widget/buttons/w_nomal_button.dart';
+import 'package:noodle_timer/screen/box_sized/container.dart';
+import 'package:noodle_timer/screen/widget/buttons/w_customButton.dart';
+import 'package:noodle_timer/screen/widget/format.dart';
+import 'package:noodle_timer/screen/widget/w_progress.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NomalTimerScreen extends StatefulWidget {
-  const NomalTimerScreen({super.key});
+  final int exTime;
+  const NomalTimerScreen({super.key, required this.exTime});
 
   @override
   State<NomalTimerScreen> createState() => _NomalTimerScreenState();
@@ -13,34 +16,14 @@ class NomalTimerScreen extends StatefulWidget {
 
 class _NomalTimerScreenState extends State<NomalTimerScreen> with TickerProviderStateMixin{
   late AnimationController controller;
-
   bool isPlaying = false;
-
-  String get countText{
-    Duration count = controller.duration! * controller.value;
-    return controller.isDismissed
-      ? "${(controller.duration!.inHours % 60)
-          .toString().padLeft(2,'0')}:${(controller.duration!.inMinutes % 60)
-          .toString().padLeft(2,'0')}:${(controller.duration!.inSeconds % 60)
-          .toString().padLeft(2,'0')}"
-
-      : "${(count.inHours % 60)
-          .toString().padLeft(2,'0')}:${(count.inMinutes % 60)
-          .toString().padLeft(2,'0')}:${(count.inSeconds % 60)
-          .toString().padLeft(2,'0')}";
-  }
-
+  bool alarmSet = false;
   double progress = 1.0;
 
   @override
   void initState() {
-    
     super.initState();
-    controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 1000)
-    );
-
+    controller =  AnimationController(vsync: this, duration: Duration(seconds: widget.exTime));
     controller.addListener(() {
       if (controller.isAnimating){
         setState(() {
@@ -52,6 +35,36 @@ class _NomalTimerScreenState extends State<NomalTimerScreen> with TickerProvider
         });
       }
     });
+    if(widget.exTime == 0){
+      setState(() {
+        alarmSet = !alarmSet;
+      });
+    }
+  }
+
+  void bottomSheetTimeSet(){
+    if(controller.isDismissed && widget.exTime == 0){
+      showBottomSheet(
+        context: context,
+        builder: (context) => SizedBox(
+          height: 200,
+          child: CupertinoTimerPicker(
+            initialTimerDuration: controller.duration!,
+            onTimerDurationChanged: (time){
+              setState(() {
+                controller.duration = time;
+              });
+            },
+          ),
+        ),
+      );
+    }
+  }
+
+  void changeTimerBool(){
+    setState(() {
+      isPlaying = !isPlaying;
+    });
   }
 
   @override
@@ -62,82 +75,73 @@ class _NomalTimerScreenState extends State<NomalTimerScreen> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xfff5fbff),
-      appBar: const MyAppBar(titleName: '기본 타이머'),
-      body: Column(
-        children: [
-          Expanded(
-            child:Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  height: 300, width: 300,
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.grey.shade300,
-                    value: progress,
-                    strokeWidth: 6,
+    return Column(
+      children: [
+        Expanded(
+          child:Stack(
+            alignment: Alignment.center,
+            children: [
+              if(alarmSet)
+                Positioned(
+                  bottom: 200,
+                  child: Column(
+                    children: [
+                      TextButton(
+                        onPressed: bottomSheetTimeSet, 
+                        child: const Icon(Icons.arrow_upward,size: 20,)
+                      ),
+                      '클릭'.text.size(15).make()
+                    ],
                   ),
                 ),
-                GestureDetector(
-                  onTap: (){
-                    if(controller.isDismissed){
-                      showBottomSheet(
-                        context: context, 
-                        builder: (context) => 
-                        Container(
-                          height: 100,
-                          child: CupertinoTimerPicker(
-                            initialTimerDuration: controller.duration!,
-                            onTimerDurationChanged: (time){
-                              setState(() {
-                                controller.duration = time;
-                              });
-                            },
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  child: AnimatedBuilder(
-                    animation: controller,
-                    builder: (context, child) => 
-                      countText.text.size(60).bold.make()),
-                ),
-              ],
-            )
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+              ProgressWidget(
+                backgroundColor: Colors.grey.shade300,
+                strokeColor: Colors.blue,
+                progress: progress,
+                strokeWidth: 6
+              ),
               GestureDetector(
-                onTap: (){
-                  if (controller.isAnimating){
+                onTap: bottomSheetTimeSet,
+                child: AnimatedBuilder(
+                  animation: controller,
+                  builder: (context, child) => NomalTimerUtils.getCountText(controller).text.size(60).bold.make()
+                ),
+              ),
+            ],
+          )
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (controller.isAnimating)
+              CustomButton(
+                buttonText: '다시시작',
+                onPressed: (){
+                  controller.reset();
+                  changeTimerBool();
+                },
+                durationTime: 0,
+              ).pOnly(right:10)
+            else
+              height5,
+              CustomButton(
+                onPressed: (){
+                  if (controller.isAnimating) {
                     controller.stop();
-                    isPlaying = !isPlaying;
-                  } else{
+                  } else {
                     controller.reverse(
                       from: controller.value == 0 ? 1.0 : controller.value
                     );
-                    isPlaying = !isPlaying;
                   }
+                  changeTimerBool();
                 },
-                child: RoudedButton(
-                  icon: isPlaying ? Icons.pause : Icons.play_arrow,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-
-                },
-                child: RoudedButton(
-                  icon: Icons.stop,
-                ),
-              )
-            ],
-          ).pSymmetric(h: 10, v: 20)
-        ],
-      )
+                buttonText: controller.isAnimating ? '일시정지' : '시작', 
+                warningText: "Tip!! 현재 페이지를 벗어나면 타이머가 초기화됩니다.",
+                durationTime: controller.isAnimating ? 10 : 0
+              ).pOnly(left:10)
+          ],
+        ).pOnly(bottom:50)
+      ],
     );
   }
 }
