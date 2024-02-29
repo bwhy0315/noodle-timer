@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:noodle_timer/screen/widget/warning/snackbar.dart';
+import 'package:noodle_timer/screen/notification/warning/snackbar.dart';
 import 'package:noodle_timer/setting/settings.dart';
 import 'package:velocity_x/velocity_x.dart';
 

@@ -5,7 +5,6 @@ import 'package:noodle_timer/screen/notification/notification_service.dart';
 import 'package:noodle_timer/screen/navigation_bar.dart';
 
 void main() async {
-  
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

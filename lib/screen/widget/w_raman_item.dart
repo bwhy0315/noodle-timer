@@ -51,9 +51,7 @@ class _RamenItemWidgetState extends State<RamenItemWidget> {
             children: [
               formatTime(widget.cookTime).text.bold.size(20).textStyle(
                 TextStyle(color: Colors.blue[600])
-              ).make().pOnly(
-                top:20, bottom: 20, 
-                right:widget.deleteFunction != null ? 0 : 15),
+              ).make().pOnly(top:20, bottom: 20, right:widget.deleteFunction != null ? 0 : 15),
               IconButton(
                 icon: const Icon(Icons.access_time, size: 40),
                 onPressed: widget.onTap,

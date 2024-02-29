@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:noodle_timer/screen/box_sized/container.dart';
+import 'package:noodle_timer/screen/box_options/container.dart';
 import 'package:noodle_timer/screen/notification/notification_service.dart';
 import 'package:noodle_timer/screen/w_app_bar.dart';
-import 'package:noodle_timer/screen/widget/buttons/w_customButton.dart';
+import 'package:noodle_timer/screen/widget/buttons/w_custom_button.dart';
 import 'package:noodle_timer/screen/widget/format.dart';
 import 'package:noodle_timer/screen/widget/w_progress.dart';
 import 'package:noodle_timer/setting/settings.dart';
@@ -42,18 +42,16 @@ class _TimerPageState extends State<TimerPage> {
     double progress = (_targetNumber / widget.cookTime).clamp(0.0, 1.0);
 
     return Scaffold(
-      appBar: MyAppBar(titleName: '누들 타이머'),
+      appBar: const MyAppBar(titleName: '누들 타이머'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             widget.ramenName.text.size(30).make().pOnly(bottom:60),
             Stack(
+              alignment: Alignment.center,
               children: [
-                Positioned(
-                  top: 90, left: 40,
-                  child: formatTime(_targetNumber).text.size(80).make()
-                ),
+                formatTime(_targetNumber).text.size(80).make().box.make(),
                 ProgressWidget(
                   backgroundColor: Colors.grey.shade300,
                   strokeColor: baseBackgroundColor,

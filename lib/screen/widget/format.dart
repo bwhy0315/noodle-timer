@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 String formatTime(int seconds) {
   int minutes = seconds ~/ 60;
   int remainingSeconds = seconds % 60;
@@ -34,25 +32,3 @@ String truncateRamenName(String ramenName) {
     return '${ramenName.substring(0, maxCharacters)}...';
   }
 }
-
-class NomalTimerUtils {
-  static String getCountText(AnimationController controller) {
-    Duration count = controller.duration! * controller.value;
-    return controller.isDismissed
-      ? "${(controller.duration!.inHours % 60).toString().padLeft(2, '0')}:${(controller.duration!.inMinutes % 60).toString().padLeft(2, '0')}:${(controller.duration!.inSeconds % 60).toString().padLeft(2, '0')}"
-      : "${(count.inHours % 60).toString().padLeft(2, '0')}:${(count.inMinutes % 60).toString().padLeft(2, '0')}:${(count.inSeconds % 60).toString().padLeft(2, '0')}";
-  }
-
-
-  static int parseDurationInSeconds(String durationString) {
-    List<String> timeComponents = durationString.split(':');
-    int hours = int.parse(timeComponents[0]);
-    if(hours == 0) hours = 1;
-    int minutes = int.parse(timeComponents[1]);
-    if(minutes == 0) hours = 1;
-    int seconds = int.parse(timeComponents[2]);
-
-    return hours * 3600 + minutes * 60 + seconds;
-  }
-}
-

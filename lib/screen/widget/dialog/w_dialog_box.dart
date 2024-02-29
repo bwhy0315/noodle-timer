@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:noodle_timer/screen/box_sized/container.dart';
-import 'package:noodle_timer/screen/widget/buttons/w_customButton.dart';
+import 'package:noodle_timer/screen/box_options/container.dart';
+import 'package:noodle_timer/screen/widget/buttons/w_custom_button.dart';
 import 'package:noodle_timer/setting/settings.dart';
 
 class TimerEditDialog extends StatefulWidget {
@@ -35,7 +35,7 @@ class _TimerEditDialogState extends State<TimerEditDialog> {
         side: BorderSide(color: Colors.blue.shade300, width: 1)
       ),
       child: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         height: 250,
         width: 200,
         child: Column(
@@ -87,4 +87,3 @@ class _TimerEditDialogState extends State<TimerEditDialog> {
     );
   }
 }
-

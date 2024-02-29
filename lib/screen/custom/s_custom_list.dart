@@ -8,7 +8,7 @@ import 'package:noodle_timer/screen/widget/controller.dart';
 import 'package:noodle_timer/screen/widget/format.dart';
 import 'package:noodle_timer/screen/widget/dialog/w_dialog_box.dart';
 import 'package:noodle_timer/screen/widget/w_raman_item.dart';
-import 'package:noodle_timer/screen/widget/warning/snackbar.dart';
+import 'package:noodle_timer/screen/notification/warning/snackbar.dart';
 import 'package:noodle_timer/setting/settings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -117,7 +117,7 @@ class _CustomScreenState extends State<CustomScreen> {
       floatingActionButton: CreateTimerButton(onPressed: createNewTimer),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
+        children: [
           if(db.customRaMenInfoList.isNotEmpty)
             Expanded(
               child: ListView.builder(

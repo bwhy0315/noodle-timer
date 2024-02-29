@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class SnackbarUtils {
   static void showCustomSnackbar(BuildContext context, int durationTime, String text) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          text,
-          style: TextStyle(
-            fontSize: 16.0,
-            color: Colors.white,
-          ),
-        ),
+        content: text.text.size(16).white.make(),
         duration: Duration(seconds: durationTime),
         backgroundColor: Colors.blue,
       ),
